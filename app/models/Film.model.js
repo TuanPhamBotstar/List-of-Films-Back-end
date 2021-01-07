@@ -3,7 +3,7 @@ let Schema = mongoose.Schema;
 
 let FilmSchema = new Schema({
     // _id:String,
-    id:Number,
+    page:Number,
     name: String,
     link: String,
     author:String,

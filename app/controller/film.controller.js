@@ -1,36 +1,38 @@
+const { json } = require("body-parser");
 const Film = require("../models/Film.model");
 
 module.exports.postFilm = (req, res) => {
   console.log(req.body);
-  const newTask = new Film({
-    id:req.body.id,
+  const newFilm = new Film({
+    page:req.body.page,
     name: req.body.name,
     link: req.body.link,
     author:req.body.author,
     show: true,
     hl:false
   });
-  newTask.save();
-  res.writeHead(302, {
-    "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Headers":
-      "Origin, X-Requested-With, Content-Type, Accept",
-  });
+  newFilm.save();
+  console.log(json(newFilm))
+  // res.writeHead(302, {
+  //   "Access-Control-Allow-Origin": "*",
+  //   "Access-Control-Allow-Headers":
+  //     "Origin, X-Requested-With, Content-Type, Accept",
+  // });
+  res.status(201).json(newFilm);
 };
 module.exports.getFilm = (req, res) => {
-  Film.find({}, (err, tasks) => {
+  Film.find({}, (err, films) => {
     if (err) throw err;
 
-    res.status(200).send(tasks);
+    res.status(200).send(films);
   });
 };
 module.exports.getFilmById = (req, res) => {
   const id = req.params._id;
   console.log(id)
-  Film.find({_id:id}, (err, task) => {
+  Film.find({_id:id}, (err, film) => {
     if (err) console.log(err);
-
-    res.status(200).send(task);
+    res.status(200).send(film);
   });
 };
 // module.exports.getFilmCompleted = (req, res) => {
@@ -51,7 +53,7 @@ module.exports.deleteFilm = (req, res) => {
 
       console.log(result);
     })
-    res.status(204);
+    res.status(204).send(id);
 };
 module.exports.updateFilm = (req, res) => {
   const id = req.params._id;
@@ -68,5 +70,5 @@ module.exports.updateFilm = (req, res) => {
     film.updateOne({ $set: { author: req.body.author } }).exec();
   }
 
-  res.status(200);
+  res.status(200).send(req.body);
 };
