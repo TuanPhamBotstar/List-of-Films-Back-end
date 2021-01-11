@@ -5,8 +5,9 @@ const controller = require('../controller/film.controller');
 
 router.post('/', controller.postFilm);
 router.get('/', controller.getFilm);
-router.get('/:_id', controller.getFilmById);
+router.get('/page/:no', controller.getOnePage);
+router.get('/:id', controller.getFilmById);
 router.delete('/:id', controller.deleteFilm);
-router.put('/:_id', controller.updateFilm);
+router.put('/:id', controller.updateFilm);
 
 module.exports = router;

@@ -4,12 +4,12 @@ const Film = require("../models/Film.model");
 module.exports.postFilm = (req, res) => {
   console.log(req.body);
   const newFilm = new Film({
-    page:req.body.page,
+    page: req.body.page,
     name: req.body.name,
     link: req.body.link,
-    author:req.body.author,
+    author: req.body.author,
     show: true,
-    hl:false
+    hl: false
   });
   newFilm.save();
   console.log(json(newFilm))
@@ -20,6 +20,7 @@ module.exports.postFilm = (req, res) => {
   // });
   res.status(201).json(newFilm);
 };
+
 module.exports.getFilm = (req, res) => {
   Film.find({}, (err, films) => {
     if (err) throw err;
@@ -27,21 +28,28 @@ module.exports.getFilm = (req, res) => {
     res.status(200).send(films);
   });
 };
+
 module.exports.getFilmById = (req, res) => {
-  const id = req.params._id;
+  const id = req.params.id;
   console.log(id)
-  Film.find({_id:id}, (err, film) => {
+  Film.find({ _id: id }, (err, film) => {
     if (err) console.log(err);
     res.status(200).send(film);
   });
 };
-// module.exports.getFilmCompleted = (req, res) => {
-//   Film.find({ isFinished: true }, (err, tasks) => {
-//     if (err) throw err;
 
-//     res.status(200).send(tasks);
-//   });
-// };
+module.exports.getOnePage = (req, res) => {
+  const { no } = req.params;
+  let moviesOnePage = [];
+  Film.find({}, (err, films) => {
+    if (err) throw err;
+    moviesOnePage = films.filter((item, index) => {
+      if (index < no * 5 && index >= (no - 1) * 5) return item;
+    });
+    res.status(200).send(moviesOnePage);
+  });
+};
+
 module.exports.deleteFilm = (req, res) => {
   const id = req.params.id;
   console.log(id);
@@ -49,14 +57,14 @@ module.exports.deleteFilm = (req, res) => {
     .deleteOne()
     .exec((err, result) => {
       console.log('hello')
-      if (err) console.log(err);  
+      if (err) console.log(err);
 
       console.log(result);
     })
-    res.status(204).send(id);
+  res.status(204).send(id);
 };
 module.exports.updateFilm = (req, res) => {
-  const id = req.params._id;
+  const id = req.params.id;
   console.log(req.body);
   const film = Film.where({ _id: id });
 
